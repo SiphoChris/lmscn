@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useState, useCallback } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
+import * as React from "react";
+import { useState, useCallback } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -13,61 +13,61 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card"
-import { CheckCircle2, XCircle, ChevronRight, Trophy } from "lucide-react"
+} from "@/components/ui/card";
+import { CheckCircle2, XCircle, ChevronRight, Trophy } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type QuizOptionId = string
+export type QuizOptionId = string;
 
 export interface QuizOption {
-  id: QuizOptionId
-  label: string
+  id: QuizOptionId;
+  label: string;
   /** Shown beneath the option after the answer is revealed */
-  explanation?: string
+  explanation?: string;
 }
 
-export type QuizQuestionType = "single" | "multiple" | "true-false"
+export type QuizQuestionType = "single" | "multiple" | "true-false";
 
 export interface QuizQuestion {
-  id: string
-  type: QuizQuestionType
-  question: string
-  options: QuizOption[]
-  correctIds: QuizOptionId[]
-  hint?: string
+  id: string;
+  type: QuizQuestionType;
+  question: string;
+  options: QuizOption[];
+  correctIds: QuizOptionId[];
+  hint?: string;
   /** Points for a correct answer (default: 1) */
-  points?: number
+  points?: number;
 }
 
 export interface QuizData {
-  title: string
-  description?: string
-  questions: QuizQuestion[]
-  showExplanations?: boolean
-  shuffle?: boolean
+  title: string;
+  description?: string;
+  questions: QuizQuestion[];
+  showExplanations?: boolean;
+  shuffle?: boolean;
   /** Pass threshold as a percentage 0–100 (default: 70) */
-  passingScore?: number
+  passingScore?: number;
 }
 
 export interface QuizResult {
-  score: number
-  maxScore: number
-  percentage: number
-  passed: boolean
-  answers: Record<string, QuizOptionId[]>
+  score: number;
+  maxScore: number;
+  percentage: number;
+  passed: boolean;
+  answers: Record<string, QuizOptionId[]>;
 }
 
 export interface QuizProps {
-  quizData: QuizData
-  onComplete?: (result: QuizResult) => void
-  className?: string
+  quizData: QuizData;
+  onComplete?: (result: QuizResult) => void;
+  className?: string;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function shuffleArray<T>(arr: T[]): T[] {
-  return [...arr].sort(() => Math.random() - 0.5)
+  return [...arr].sort(() => Math.random() - 0.5);
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -79,88 +79,98 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
     showExplanations = true,
     shuffle = false,
     passingScore = 70,
-  } = quizData
+  } = quizData;
 
   const questions = React.useMemo(
     () => (shuffle ? shuffleArray(quizData.questions) : quizData.questions),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+    [],
+  );
 
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [selected, setSelected] = useState<QuizOptionId[]>([])
-  const [submitted, setSubmitted] = useState(false)
-  const [answers, setAnswers] = useState<Record<string, QuizOptionId[]>>({})
-  const [finished, setFinished] = useState(false)
-  const [result, setResult] = useState<QuizResult | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selected, setSelected] = useState<QuizOptionId[]>([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, QuizOptionId[]>>({});
+  const [finished, setFinished] = useState(false);
+  const [result, setResult] = useState<QuizResult | null>(null);
 
-  const question = questions[currentIndex]
-  const isMultiple = question.type === "multiple"
+  const question = questions[currentIndex];
+  const isMultiple = question.type === "multiple";
   const progress =
-    ((currentIndex + (submitted ? 1 : 0)) / questions.length) * 100
+    ((currentIndex + (submitted ? 1 : 0)) / questions.length) * 100;
 
   const toggleOption = useCallback(
     (id: QuizOptionId) => {
-      if (submitted) return
+      if (submitted) return;
       if (isMultiple) {
         setSelected((prev) =>
-          prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-        )
+          prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+        );
       } else {
-        setSelected([id])
+        setSelected([id]);
       }
     },
-    [submitted, isMultiple]
-  )
+    [submitted, isMultiple],
+  );
 
   const handleSubmit = useCallback(() => {
-    if (selected.length === 0) return
-    setSubmitted(true)
-    setAnswers((prev) => ({ ...prev, [question.id]: selected }))
-  }, [selected, question.id])
+    if (selected.length === 0) return;
+    setSubmitted(true);
+    setAnswers((prev) => ({ ...prev, [question.id]: selected }));
+  }, [selected, question.id]);
 
   const handleNext = useCallback(() => {
     if (currentIndex + 1 >= questions.length) {
-      const allAnswers = { ...answers, [question.id]: selected }
-      let score = 0
-      let maxScore = 0
+      const allAnswers = { ...answers, [question.id]: selected };
+      let score = 0;
+      let maxScore = 0;
       for (const q of questions) {
-        const pts = q.points ?? 1
-        maxScore += pts
-        const given = allAnswers[q.id] ?? []
-        if ([...q.correctIds].sort().join(",") === [...given].sort().join(",")) {
-          score += pts
+        const pts = q.points ?? 1;
+        maxScore += pts;
+        const given = allAnswers[q.id] ?? [];
+        if (
+          [...q.correctIds].sort().join(",") === [...given].sort().join(",")
+        ) {
+          score += pts;
         }
       }
-      const percentage = Math.round((score / maxScore) * 100)
+      const percentage = Math.round((score / maxScore) * 100);
       const res: QuizResult = {
         score,
         maxScore,
         percentage,
         passed: percentage >= passingScore,
         answers: allAnswers,
-      }
-      setResult(res)
-      setFinished(true)
-      onComplete?.(res)
+      };
+      setResult(res);
+      setFinished(true);
+      onComplete?.(res);
     } else {
-      setCurrentIndex((i) => i + 1)
-      setSelected([])
-      setSubmitted(false)
+      setCurrentIndex((i) => i + 1);
+      setSelected([]);
+      setSubmitted(false);
     }
-  }, [currentIndex, questions, answers, question.id, selected, passingScore, onComplete])
+  }, [
+    currentIndex,
+    questions,
+    answers,
+    question.id,
+    selected,
+    passingScore,
+    onComplete,
+  ]);
 
   const isCorrect = useCallback(
     (id: QuizOptionId) => question.correctIds.includes(id),
-    [question.correctIds]
-  )
+    [question.correctIds],
+  );
 
   const optionState = (id: QuizOptionId) => {
-    if (!submitted) return selected.includes(id) ? "selected" : "idle"
-    if (isCorrect(id)) return "correct"
-    if (selected.includes(id)) return "wrong"
-    return "idle"
-  }
+    if (!submitted) return selected.includes(id) ? "selected" : "idle";
+    if (isCorrect(id)) return "correct";
+    if (selected.includes(id)) return "wrong";
+    return "idle";
+  };
 
   // ── Results screen ────────────────────────────────────────────────────────
   if (finished && result) {
@@ -171,7 +181,7 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
             <Trophy
               className={cn(
                 "size-16",
-                result.passed ? "text-yellow-500" : "text-muted-foreground"
+                result.passed ? "text-yellow-500" : "text-muted-foreground",
               )}
             />
           </div>
@@ -194,7 +204,7 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
           </Badge>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   // ── Question screen ───────────────────────────────────────────────────────
@@ -222,12 +232,18 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
           </p>
         )}
         {isMultiple && !submitted && (
-          <p className="text-xs text-muted-foreground">Select all that apply.</p>
+          <p className="text-xs text-muted-foreground">
+            Select all that apply.
+          </p>
         )}
 
-        <ul className="space-y-2" role="listbox" aria-multiselectable={isMultiple}>
+        <ul
+          className="space-y-2"
+          role="listbox"
+          aria-multiselectable={isMultiple}
+        >
           {question.options.map((opt) => {
-            const state = optionState(opt.id)
+            const state = optionState(opt.id);
             return (
               <li key={opt.id}>
                 <button
@@ -238,20 +254,25 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
                     "w-full flex items-start gap-3 rounded-lg border px-4 py-3 text-sm text-left transition-colors",
                     state === "idle" && "hover:bg-muted/50 border-border",
                     state === "selected" && "border-primary bg-primary/5",
-                    state === "correct" && "border-green-500 bg-green-50 dark:bg-green-950/20",
-                    state === "wrong" && "border-destructive bg-destructive/5"
+                    state === "correct" &&
+                      "border-green-500 bg-green-50 dark:bg-green-950/20",
+                    state === "wrong" && "border-destructive bg-destructive/5",
                   )}
                 >
                   <span className="mt-0.5 shrink-0">
-                    {state === "correct" && <CheckCircle2 className="size-4 text-green-600" />}
-                    {state === "wrong" && <XCircle className="size-4 text-destructive" />}
+                    {state === "correct" && (
+                      <CheckCircle2 className="size-4 text-green-600" />
+                    )}
+                    {state === "wrong" && (
+                      <XCircle className="size-4 text-destructive" />
+                    )}
                     {(state === "idle" || state === "selected") && (
                       <span
                         className={cn(
                           "inline-flex size-4 items-center justify-center rounded-full border text-[10px] font-bold",
                           state === "selected"
                             ? "border-primary bg-primary text-primary-foreground"
-                            : "border-muted-foreground"
+                            : "border-muted-foreground",
                         )}
                       />
                     )}
@@ -266,7 +287,7 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
                   </span>
                 </button>
               </li>
-            )
+            );
           })}
         </ul>
       </CardContent>
@@ -284,5 +305,5 @@ export function Quiz({ quizData, onComplete, className }: QuizProps) {
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
