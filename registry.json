@@ -1,0 +1,87 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "lmscn",
+  "homepage": "https://lmscn.vercel.app",
+  "items": [
+    {
+      "name": "quiz",
+      "type": "registry:component",
+      "title": "Quiz",
+      "description": "Multi-type quiz (single-choice, multi-select, true/false) with per-question scoring, progress bar, answer explanations and a pass/fail results screen.",
+      "files": [{ "path": "registry/default/quiz/quiz.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "card", "progress", "badge"]
+    },
+    {
+      "name": "flashcards",
+      "type": "registry:component",
+      "title": "Flashcards",
+      "description": "CSS 3-D flip-card deck with optional self-rating (Again / Hard / Good / Easy) and a session summary.",
+      "files": [{ "path": "registry/default/flashcards/flashcards.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "card", "progress", "badge"]
+    },
+    {
+      "name": "match",
+      "type": "registry:component",
+      "title": "Match",
+      "description": "Click-to-match term/definition pairs with mistake tracking and animated wrong-answer shake.",
+      "files": [{ "path": "registry/default/match/match.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "progress", "badge"]
+    },
+    {
+      "name": "fill-blank",
+      "type": "registry:component",
+      "title": "Fill in the Blank",
+      "description": "Inline blank-filling exercise supporting multiple blanks per sentence, alternative accepted answers and keyboard navigation.",
+      "files": [{ "path": "registry/default/fill-blank/fill-blank.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "input", "progress", "badge"]
+    },
+    {
+      "name": "scramble",
+      "type": "registry:component",
+      "title": "Word Scramble",
+      "description": "Letter-tile word unscrambling game with optional image/text clues and a reset button.",
+      "files": [{ "path": "registry/default/scramble/scramble.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "progress", "badge"]
+    },
+    {
+      "name": "order",
+      "type": "registry:component",
+      "title": "Order / Sequence",
+      "description": "Drag-and-drop (or ↑↓ keyboard) item-sequencing exercise that reveals the correct order on failure.",
+      "files": [{ "path": "registry/default/order/order.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "progress", "badge"]
+    },
+    {
+      "name": "reading-passage",
+      "type": "registry:component",
+      "title": "Reading Passage",
+      "description": "Three-phase reading comprehension: passage view → inline questions → results. Supports plain text or HTML and optional passage-hiding.",
+      "files": [{ "path": "registry/default/reading-passage/reading-passage.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "card", "badge", "progress", "scroll-area", "separator"]
+    },
+    {
+      "name": "progress-tracker",
+      "type": "registry:component",
+      "title": "Progress Tracker",
+      "description": "Gamified zigzag lesson map with XP bar, level badge, daily streak and tooltip-rich lesson nodes.",
+      "files": [{ "path": "registry/default/progress-tracker/progress-tracker.tsx", "type": "registry:component" }],
+      "registryDependencies": ["badge", "card", "progress", "tooltip"]
+    },
+    {
+      "name": "spaced-repetition",
+      "type": "registry:component",
+      "title": "Spaced Repetition",
+      "description": "SM-2 algorithm review session: flip cards, grade with Again/Hard/Good/Easy, computes next interval and ease factor.",
+      "files": [{ "path": "registry/default/spaced-repetition/spaced-repetition.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "badge", "card", "progress"]
+    },
+    {
+      "name": "hotspot",
+      "type": "registry:component",
+      "title": "Image Hotspot",
+      "description": "Click labelled markers on a diagram or photo, type the answer in a popover, check all labels at once.",
+      "files": [{ "path": "registry/default/hotspot/hotspot.tsx", "type": "registry:component" }],
+      "registryDependencies": ["button", "badge", "input", "progress", "popover"]
+    }
+  ]
+}
