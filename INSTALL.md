@@ -7,7 +7,7 @@
 | Tailwind CSS | **v4** |
 | shadcn/ui | latest (new-york style) |
 | React | 19 |
-| Next.js | 15 |
+| Next.js | 16 |
 
 ---
 
