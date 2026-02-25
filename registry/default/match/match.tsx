@@ -3,9 +3,9 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Badge } from "@/registry/default/ui/badge"
-import { Progress } from "@/registry/default/ui/progress"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import { CheckCircle2, RotateCcw } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────

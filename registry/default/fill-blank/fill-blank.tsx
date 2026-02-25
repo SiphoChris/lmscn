@@ -3,10 +3,10 @@
 import * as React from "react"
 import { useState, useCallback, useRef } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Input } from "@/registry/default/ui/input"
-import { Progress } from "@/registry/default/ui/progress"
-import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
 import { CheckCircle2, XCircle, ChevronRight } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────

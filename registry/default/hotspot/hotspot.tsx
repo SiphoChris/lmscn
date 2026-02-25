@@ -3,15 +3,15 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Badge } from "@/registry/default/ui/badge"
-import { Input } from "@/registry/default/ui/input"
-import { Progress } from "@/registry/default/ui/progress"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/default/ui/popover"
+} from "@/components/ui/popover"
 import { CheckCircle2, XCircle, ChevronRight } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────

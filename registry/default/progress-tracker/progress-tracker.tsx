@@ -2,15 +2,15 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Badge } from "@/registry/default/ui/badge"
-import { Progress } from "@/registry/default/ui/progress"
-import { Card, CardContent } from "@/registry/default/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/registry/default/ui/tooltip"
+} from "@/components/ui/tooltip"
 import { CheckCircle2, Lock, Zap, Star, Trophy } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────

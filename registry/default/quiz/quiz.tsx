@@ -3,9 +3,9 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Progress } from "@/registry/default/ui/progress"
-import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/registry/default/ui/card"
+} from "@/components/ui/card"
 import { CheckCircle2, XCircle, ChevronRight, Trophy } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
