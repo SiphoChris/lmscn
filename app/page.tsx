@@ -3,30 +3,102 @@
 import Link from "next/link";
 
 const components = [
-  { name: "quiz",              slug: "quiz",              description: "Multi-type quiz with scoring, explanations and pass/fail",        tag: "Assessment"  },
-  { name: "flashcards",       slug: "flashcards",        description: "3-D flip-cards with self-rating (Again / Hard / Good / Easy)",   tag: "Memory"      },
-  { name: "match",            slug: "match",             description: "Click-to-match term/definition pairs with mistake tracking",      tag: "Practice"    },
-  { name: "fill-blank",       slug: "fill-blank",        description: "Inline cloze exercises with multi-blank and alternative answers", tag: "Practice"    },
-  { name: "scramble",         slug: "scramble",          description: "Letter-tile word unscrambling with image and text clues",        tag: "Practice"    },
-  { name: "order",            slug: "order",             description: "Drag-and-drop or keyboard item sequencing",                      tag: "Practice"    },
-  { name: "reading-passage",  slug: "reading-passage",   description: "Reading comprehension across three phases: read, answer, review", tag: "Assessment"  },
-  { name: "progress-tracker", slug: "progress-tracker",  description: "Gamified XP lesson map with streaks, levels and unit progress",  tag: "Navigation"  },
-  { name: "spaced-repetition",slug: "spaced-repetition", description: "SM-2 algorithm review session with computed next intervals",     tag: "Memory"      },
-  { name: "hotspot",          slug: "hotspot",           description: "Click markers on diagrams and type labels into popovers",        tag: "Assessment"  },
+  {
+    name: "quiz",
+    slug: "quiz",
+    description: "Multi-type quiz with scoring, explanations and pass/fail",
+    tag: "Assessment",
+  },
+  {
+    name: "flashcards",
+    slug: "flashcards",
+    description: "3-D flip-cards with self-rating (Again / Hard / Good / Easy)",
+    tag: "Memory",
+  },
+  {
+    name: "match",
+    slug: "match",
+    description: "Click-to-match term/definition pairs with mistake tracking",
+    tag: "Practice",
+  },
+  {
+    name: "fill-blank",
+    slug: "fill-blank",
+    description:
+      "Inline cloze exercises with multi-blank and alternative answers",
+    tag: "Practice",
+  },
+  {
+    name: "scramble",
+    slug: "scramble",
+    description: "Letter-tile word unscrambling with image and text clues",
+    tag: "Practice",
+  },
+  {
+    name: "order",
+    slug: "order",
+    description: "Drag-and-drop or keyboard item sequencing",
+    tag: "Practice",
+  },
+  {
+    name: "reading-passage",
+    slug: "reading-passage",
+    description:
+      "Reading comprehension across three phases: read, answer, review",
+    tag: "Assessment",
+  },
+  {
+    name: "progress-tracker",
+    slug: "progress-tracker",
+    description:
+      "Gamified XP lesson map with streaks, levels and unit progress",
+    tag: "Navigation",
+  },
+  {
+    name: "spaced-repetition",
+    slug: "spaced-repetition",
+    description: "SM-2 algorithm review session with computed next intervals",
+    tag: "Memory",
+  },
+  {
+    name: "hotspot",
+    slug: "hotspot",
+    description: "Click markers on diagrams and type labels into popovers",
+    tag: "Assessment",
+  },
 ];
 
 const TAG_STYLES: Record<string, string> = {
   Assessment: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  Memory:     "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  Practice:   "bg-sky-500/10 text-sky-400 border-sky-500/20",
+  Memory: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  Practice: "bg-sky-500/10 text-sky-400 border-sky-500/20",
   Navigation: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 };
 
-const TAG_COLOR_MAP: Record<string, { bg: string; color: string; border: string }> = {
-  Assessment: { bg: "rgba(245,158,11,0.08)", color: "#fbbf24", border: "rgba(245,158,11,0.2)" },
-  Memory:     { bg: "rgba(139,92,246,0.08)", color: "#a78bfa", border: "rgba(139,92,246,0.2)" },
-  Practice:   { bg: "rgba(14,165,233,0.08)", color: "#38bdf8", border: "rgba(14,165,233,0.2)" },
-  Navigation: { bg: "rgba(16,185,129,0.08)", color: "#34d399", border: "rgba(16,185,129,0.2)" },
+const TAG_COLOR_MAP: Record<
+  string,
+  { bg: string; color: string; border: string }
+> = {
+  Assessment: {
+    bg: "rgba(245,158,11,0.08)",
+    color: "#fbbf24",
+    border: "rgba(245,158,11,0.2)",
+  },
+  Memory: {
+    bg: "rgba(139,92,246,0.08)",
+    color: "#a78bfa",
+    border: "rgba(139,92,246,0.2)",
+  },
+  Practice: {
+    bg: "rgba(14,165,233,0.08)",
+    color: "#38bdf8",
+    border: "rgba(14,165,233,0.2)",
+  },
+  Navigation: {
+    bg: "rgba(16,185,129,0.08)",
+    color: "#34d399",
+    border: "rgba(16,185,129,0.2)",
+  },
 };
 
 export default function Home() {
@@ -462,11 +534,21 @@ export default function Home() {
       <div className="page">
         <nav>
           <div className="nav-inner">
-            <a href="/" className="nav-logo">lmscn</a>
+            <a href="/" className="nav-logo">
+              lmscn
+            </a>
             <ul className="nav-links">
-              <li><a href="/docs">Docs</a></li>
-              <li><a href="/docs/installation">Install</a></li>
-              <li><a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
+              <li>
+                <a href="/docs">Docs</a>
+              </li>
+              <li>
+                <a href="/docs/installation">Install</a>
+              </li>
+              <li>
+                <a href="https://github.com/SiphoChris/lmscn.git" target="_blank" rel="noreferrer">
+                  GitHub
+                </a>
+              </li>
             </ul>
           </div>
         </nav>
@@ -475,13 +557,15 @@ export default function Home() {
         <section className="hero">
           <p className="hero-eyebrow">shadcn/ui registry</p>
           <h1 className="hero-title">
-            Learning components,<br />
+            Learning components,
+            <br />
             <em>ready to ship.</em>
           </h1>
           <p className="hero-sub">
             Ten interactive LMS components built on shadcn/ui and Tailwind v4.
-            Fully typed, accessible, and wired up with <code style={{color: "#aaa"}}>onComplete</code> callbacks.
-            Drop them into your Next.js app and own the code.
+            Fully typed, accessible, and wired up with{" "}
+            <code style={{ color: "#aaa" }}>onComplete</code> callbacks. Drop
+            them into your Next.js app and own the code.
           </p>
           <div className="hero-actions">
             <a href="/docs" className="btn-primary">
@@ -496,10 +580,10 @@ export default function Home() {
         {/* Stats */}
         <div className="stats">
           {[
-            { num: "10",  label: "Components"     },
-            { num: "v4",  label: "Tailwind"        },
-            { num: "SM-2",label: "Spaced repetition" },
-            { num: "MIT", label: "License"         },
+            { num: "10", label: "Components" },
+            { num: "v4", label: "Tailwind" },
+            { num: "SM-2", label: "Spaced repetition" },
+            { num: "MIT", label: "License" },
           ].map((s) => (
             <div key={s.label} className="stat">
               <div className="stat-num">{s.num}</div>
@@ -516,7 +600,11 @@ export default function Home() {
 
         <div className="grid">
           {components.map((c) => {
-            const tagColors = TAG_COLOR_MAP[c.tag] || { bg: "transparent", color: "#666", border: "#333" };
+            const tagColors = TAG_COLOR_MAP[c.tag] || {
+              bg: "transparent",
+              color: "#666",
+              border: "#333",
+            };
             return (
               <a
                 key={c.slug}
@@ -558,10 +646,18 @@ export default function Home() {
         </div>
 
         <footer>
-          <span className="footer-left">© {new Date().getFullYear()} lmscn. Built with shadcn/ui.</span>
+          <span className="footer-left">
+            © {new Date().getFullYear()} lmscn. Built with shadcn/ui.
+          </span>
           <ul className="footer-links">
-            <li><a href="/docs">Docs</a></li>
-            <li><a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
+            <li>
+              <a href="/docs">Docs</a>
+            </li>
+            <li>
+              <a href="https://github.com/SiphoChris/lmscn.git" target="_blank" rel="noreferrer">
+                GitHub
+              </a>
+            </li>
           </ul>
         </footer>
       </div>
