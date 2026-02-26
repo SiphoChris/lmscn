@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "registry:build": "shadcn build",
+    "registry:build": "shadcn build && node scripts/strip-content.mjs",
     "registry:serve": "next dev --turbopack"
   },
   "dependencies": {
