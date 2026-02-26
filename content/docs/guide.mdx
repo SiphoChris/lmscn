@@ -1,0 +1,40 @@
+---
+title: Guide
+description: Guide on the components you can use.
+---
+
+**lmscn** gives you ten production-ready interactive learning components you can drop into any Next.js + shadcn/ui project. Every component is fully typed, accessible, and wired up with an `onComplete` callback so you can integrate with your LMS backend in minutes.
+
+## Components
+
+**lmscn components and their required shadcn primitives:**
+
+| lmscn component | Required primitives |
+|---|---|
+| `quiz` | button, card, progress, badge |
+| `flashcards` | button, card, progress, badge |
+| `match` | button, progress, badge |
+| `fill-blank` | button, input, progress, badge |
+| `scramble` | button, progress, badge |
+| `order` | button, progress, badge |
+| `reading-passage` | button, card, badge, progress, scroll-area, separator |
+| `progress-tracker` | badge, card, progress, tooltip |
+| `spaced-repetition` | button, badge, card, progress |
+| `hotspot` | button, badge, input, progress, popover |
+
+### Radix UI packages
+
+These are installed automatically by shadcn — no manual action needed.
+
+| Primitive | Radix package |
+|---|---|
+| `button` | `@radix-ui/react-slot` |
+| `progress` | `@radix-ui/react-progress` |
+| `scroll-area` | `@radix-ui/react-scroll-area` |
+| `separator` | `@radix-ui/react-separator` |
+| `tooltip` | `@radix-ui/react-tooltip` |
+| `popover` | `@radix-ui/react-popover` |
+| `card`, `badge`, `input` | none (pure Tailwind) |
+
+
+See the [Installation](/docs/installation) guide for full details.
