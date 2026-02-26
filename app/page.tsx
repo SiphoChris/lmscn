@@ -1,5 +1,6 @@
 "use client";
 
+import { LmscnLogo } from "@/components/logo";
 import Link from "next/link";
 
 const components = [
@@ -534,9 +535,9 @@ export default function Home() {
       <div className="page">
         <nav>
           <div className="nav-inner">
-            <a href="/" className="nav-logo">
-              lmscn
-            </a>
+            <Link href="/" className="nav-logo">
+              <LmscnLogo />
+            </Link> 
             <ul className="nav-links">
               <li>
                 <a href="/docs">Docs</a>
@@ -545,7 +546,11 @@ export default function Home() {
                 <a href="/docs/installation">Install</a>
               </li>
               <li>
-                <a href="https://github.com/SiphoChris/lmscn.git" target="_blank" rel="noreferrer">
+                <a
+                  href="https://github.com/SiphoChris/lmscn.git"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   GitHub
                 </a>
               </li>
@@ -606,11 +611,7 @@ export default function Home() {
               border: "#333",
             };
             return (
-              <a
-                key={c.slug}
-                href={`/docs/${c.slug}`}
-                className="card"
-              >
+              <a key={c.slug} href={`/docs/${c.slug}`} className="card">
                 <div className="card-name">{c.name}</div>
                 <div className="card-desc">{c.description}</div>
                 <div className="card-footer">
@@ -654,9 +655,14 @@ export default function Home() {
               <a href="/docs">Docs</a>
             </li>
             <li>
-              <a href="https://github.com/SiphoChris/lmscn.git" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/SiphoChris/lmscn.git"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub
               </a>
+              <LmscnLogo />
             </li>
           </ul>
         </footer>
