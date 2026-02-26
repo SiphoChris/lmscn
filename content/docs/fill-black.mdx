@@ -1,0 +1,118 @@
+---
+title: Fill in the Blank
+description: Sentence-based cloze exercises with inline text inputs and accepted-alternative support.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/fill-blank.json
+```
+
+**Required primitives:** button, input, progress, badge
+
+```bash
+npx shadcn@latest add button input progress badge
+```
+
+## Usage
+
+```tsx
+import { FillBlank } from "@/components/lms/fill-blank"
+import type { FillBlankData, FillBlankResult } from "@/components/lms/fill-blank"
+
+export function MyFillBlank() {
+  return (
+    <FillBlank
+      fillBlankData={{
+        title: "Biology",
+        showCorrection: true,
+        questions: [
+          {
+            id: "q1",
+            sentence: "The powerhouse of the cell is the ___.",
+            answers: ["mitochondria"],
+            alternatives: [["mitochondrion"]],
+            hint: "It produces ATP.",
+          },
+          {
+            id: "q2",
+            sentence: "Water is made of ___ and ___.",
+            answers: ["hydrogen", "oxygen"],
+          },
+        ],
+      }}
+      onComplete={(result: FillBlankResult) => {
+        console.log(result.percentage + "%")
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `FillBlankProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `fillBlankData` | `FillBlankData` | ✓ | Questions configuration |
+| `onComplete` | `(result: FillBlankResult) => void` | — | Called after the last question |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `FillBlankData`
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | Activity title |
+| `description` | `string` | — | Subtitle |
+| `questions` | `FillBlankQuestion[]` | — | List of cloze questions |
+| `showCorrection` | `boolean` | `true` | Reveal correct answers when the learner is wrong |
+
+### `FillBlankQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `sentence` | `string` | Sentence with blanks marked as `___` |
+| `answers` | `string[]` | Correct answer for each blank, in order |
+| `caseSensitive` | `boolean` | Case-sensitive matching — defaults to `false` |
+| `alternatives` | `Array<string[]>` | Per-blank list of accepted alternative answers (same index as `answers`) |
+| `hint` | `string` | Optional hint shown before submitting |
+
+## Result
+
+`onComplete` receives a `FillBlankResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `attempts` | `FillBlankAttempt[]` | Per-question attempt records |
+| `score` | `number` | Number of fully correct questions |
+| `maxScore` | `number` | Total number of questions |
+| `percentage` | `number` | Rounded score percentage |
+
+```ts
+interface FillBlankAttempt {
+  questionId: string
+  given: string[]   // one entry per blank, in order
+  correct: boolean  // true only if every blank was correct
+}
+```
+
+## Authoring blanks
+
+Mark each blank with exactly three underscores (`___`). The component splits the sentence on this token, counts the blanks, and renders a matching number of inline inputs.
+
+```
+"The ___ is the ___ of the cell."
+         ↑                ↑
+      blank 1           blank 2
+```
+
+`answers[0]` maps to blank 1, `answers[1]` to blank 2, and so on. `alternatives[0]` is the list of extra accepted answers for blank 1.
+
+## Keyboard navigation
+
+Pressing **Enter** inside a blank advances focus to the next blank. On the last blank, Enter submits the question (equivalent to clicking **Check**).

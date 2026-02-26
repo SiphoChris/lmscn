@@ -1,0 +1,129 @@
+---
+title: Progress Tracker
+description: A Duolingo-style visual learning path with XP, levels, streaks, and lesson status nodes.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/progress-tracker.json
+```
+
+**Required primitives:** badge, card, progress, tooltip
+
+```bash
+npx shadcn@latest add badge card progress tooltip
+```
+
+## Usage
+
+```tsx
+import { ProgressTracker } from "@/components/lms/progress-tracker"
+import type { ProgressTrackerData, LessonNode } from "@/components/lms/progress-tracker"
+
+export function MyProgress() {
+  return (
+    <ProgressTracker
+      progressTrackerData={{
+        learnerName: "Alex",
+        totalXp: 340,
+        xpToNextLevel: 500,
+        level: 4,
+        streak: 7,
+        units: [
+          {
+            id: "u1",
+            title: "Biology Unit 1",
+            lessons: [
+              { id: "l1", title: "The Cell",       status: "completed", xp: 50,  type: "reading",   score: 92 },
+              { id: "l2", title: "Cell Organelles", status: "current",   xp: 100, type: "quiz" },
+              { id: "l3", title: "Match Functions", status: "available", xp: 75,  type: "match" },
+              { id: "l4", title: "Cell Review",     status: "locked",    xp: 120, type: "spaced-repetition" },
+            ],
+          },
+        ],
+      }}
+      onLessonSelect={(lesson: LessonNode) => {
+        console.log("Opening:", lesson.id)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `ProgressTrackerProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `progressTrackerData` | `ProgressTrackerData` | ✓ | Learner state and curriculum |
+| `onLessonSelect` | `(lesson: LessonNode) => void` | — | Called when an `"available"` or `"current"` lesson is clicked |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `ProgressTrackerData`
+
+| Field | Type | Description |
+|---|---|---|
+| `learnerName` | `string` | Displayed in the header greeting |
+| `totalXp` | `number` | Current XP total |
+| `xpToNextLevel` | `number` | XP required to reach the next level |
+| `level` | `number` | Current level number |
+| `streak` | `number` | Daily streak in days (hidden if `0` or omitted) |
+| `units` | `LearningUnit[]` | Curriculum units, each containing a list of lessons |
+
+### `LearningUnit`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `title` | `string` | Unit heading |
+| `lessons` | `LessonNode[]` | Ordered list of lessons in this unit |
+
+### `LessonNode`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `title` | `string` | Displayed beside the node |
+| `status` | `LessonStatus` | Controls the visual state of the node |
+| `xp` | `number` | XP earned (completed) or on offer (future) |
+| `type` | `LessonType` | Abbreviation shown inside the node circle |
+| `score` | `number` | Score 0–100 shown beneath the title if the lesson is completed |
+
+## Types
+
+### `LessonStatus`
+
+| Value | Appearance | Clickable |
+|---|---|---|
+| `"completed"` | Green with ✓ icon | No |
+| `"current"` | Primary colour with ⚡ icon, pulsing ring | Yes |
+| `"available"` | Outlined, primary border on hover | Yes |
+| `"locked"` | Muted with 🔒 icon | No |
+
+### `LessonType`
+
+Controls the abbreviation rendered inside the node for available/locked lessons:
+
+| Value | Label |
+|---|---|
+| `"quiz"` | Q |
+| `"flashcards"` | F |
+| `"match"` | M |
+| `"reading"` | R |
+| `"video"` | ▶ |
+| `"exercise"` | ✎ |
+| `"scramble"` | S |
+| `"order"` | O |
+| `"hotspot"` | H |
+| `"spaced-repetition"` | SR |
+
+## Behaviour
+
+- Each unit shows its own progress bar (completed lessons / total lessons).
+- Lessons are laid out in a **zigzag path** — odd-indexed lessons are offset to the right, even-indexed to the left.
+- Hovering a node shows a **tooltip** with the lesson title, XP, and score (if completed).
+- The XP progress bar in the header fills from `0` to `xpToNextLevel`. It caps at 100% if `totalXp >= xpToNextLevel`.

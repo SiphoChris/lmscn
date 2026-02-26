@@ -1,7 +1,46 @@
 ---
-title: Hello World
+title: Introduction
+description: A collection of plug-and-play React learning components built on shadcn/ui and Tailwind CSS v4.
 ---
 
-## Introduction
+**lmscn** gives you ten production-ready interactive learning components you can drop into any Next.js + shadcn/ui project. Every component is fully typed, accessible, and wired up with an `onComplete` callback so you can integrate with your LMS backend in minutes.
 
-I love Anime.
+## Components
+
+| Component | Description |
+|---|---|
+| [Quiz](/docs/components/quiz) | Multiple-choice, single-choice, and true/false questions with scoring |
+| [Flashcards](/docs/components/flashcards) | Flippable cards with optional Again/Hard/Good/Easy self-rating |
+| [Match](/docs/components/match) | Two-column term-to-definition matching |
+| [Fill in the Blank](/docs/components/fill-blank) | Inline cloze exercises with multiple blanks per sentence |
+| [Scramble](/docs/components/scramble) | Letter-tile unscrambling with image and text clues |
+| [Order](/docs/components/order) | Drag-and-drop (or keyboard) sequencing |
+| [Reading Passage](/docs/components/reading-passage) | Passage + comprehension questions in a three-phase flow |
+| [Progress Tracker](/docs/components/progress-tracker) | Duolingo-style visual learning path with XP, levels, and streaks |
+| [Spaced Repetition](/docs/components/spaced-repetition) | SM-2 algorithm review sessions with self-grading |
+| [Hotspot](/docs/components/hotspot) | Click-to-label image annotation |
+
+## Stack requirements
+
+| Tool | Version |
+|---|---|
+| Next.js | 16+ |
+| React | 19 |
+| Tailwind CSS | **v4** |
+| shadcn/ui | latest (new-york style) |
+
+## Quick start
+
+```bash
+# 1. Initialise shadcn/ui if you haven't already
+npx shadcn@latest init
+
+# 2. Install all required primitives
+npx shadcn@latest add button card progress badge input scroll-area separator tooltip popover
+
+# 3. Add the components you need
+npx shadcn@latest add https://lmscn.vercel.app/r/quiz.json
+npx shadcn@latest add https://lmscn.vercel.app/r/flashcards.json
+```
+
+See the [Installation](/docs/installation) guide for full details, per-component primitive requirements, and Tailwind v4 configuration.

@@ -1,0 +1,120 @@
+---
+title: Spaced Repetition
+description: An SM-2 spaced-repetition review session with self-grading and computed next intervals.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/spaced-repetition.json
+```
+
+**Required primitives:** button, badge, card, progress
+
+```bash
+npx shadcn@latest add button badge card progress
+```
+
+## Usage
+
+```tsx
+import { SpacedRepetition } from "@/components/lms/spaced-repetition"
+import type { SpacedRepetitionData, SpacedRepetitionResult } from "@/components/lms/spaced-repetition"
+
+export function MySR() {
+  return (
+    <SpacedRepetition
+      spacedRepetitionData={{
+        title: "French Review",
+        description: "Cards due today",
+        totalCards: 120,
+        dueCards: [
+          { id: "1", front: "bonjour",   back: "hello",     interval: 3,  easeFactor: 2.5 },
+          { id: "2", front: "merci",     back: "thank you", interval: 7,  easeFactor: 2.8 },
+          { id: "3", front: "au revoir", back: "goodbye",   interval: 1,  easeFactor: 2.1 },
+        ],
+      }}
+      onComplete={(result: SpacedRepetitionResult) => {
+        // Persist result.sessions to your backend to update each card's schedule
+        console.log(result.sessions)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `SpacedRepetitionProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `spacedRepetitionData` | `SpacedRepetitionData` | ✓ | Session and card configuration |
+| `onComplete` | `(result: SpacedRepetitionResult) => void` | — | Called after all due cards are graded |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `SpacedRepetitionData`
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | `string` | Session title |
+| `description` | `string` | Subtitle |
+| `dueCards` | `ReviewCard[]` | Cards to review in this session |
+| `totalCards` | `number` | Total deck size — shown as context in the header |
+
+### `ReviewCard`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `front` | `string` | Question / prompt side |
+| `back` | `string` | Answer side |
+| `tags` | `string[]` | Category badges shown on the front face |
+| `nextReviewDate` | `string` | ISO date string of the scheduled review (display only) |
+| `interval` | `number` | Current interval in days — used as input to the SM-2 algorithm |
+| `easeFactor` | `number` | SM-2 ease factor — defaults to `2.5` if omitted |
+
+## Result
+
+`onComplete` receives a `SpacedRepetitionResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `sessions` | `ReviewSession[]` | Per-card review records with computed scheduling data |
+| `hardCardIds` | `string[]` | IDs of cards graded below 3 (need re-study) |
+
+```ts
+interface ReviewSession {
+  cardId: string
+  grade: ReviewGrade       // the grade the learner chose
+  nextInterval: number     // computed next interval in days
+  nextEaseFactor: number   // updated ease factor
+}
+```
+
+Persist `nextInterval` and `nextEaseFactor` to your database and schedule the card's next review as `today + nextInterval days`.
+
+## Grading scale
+
+The component uses a simplified 4-button interface that maps to SM-2 quality values:
+
+| Button | SM-2 grade | Meaning |
+|---|---|---|
+| Again | 1 | Complete blackout |
+| Hard | 2 | Difficult recall |
+| Good | 3 | Correct with effort |
+| Easy | 4 | Recalled easily |
+
+Grade buttons are only shown **after** the card is flipped.
+
+## SM-2 algorithm
+
+The interval and ease factor are computed with the standard SM-2 formula:
+
+- Grades **< 3**: interval resets to 1 day, ease factor decreases by 0.2 (minimum 1.3).
+- Grade **3+**: interval grows by `prev × easeFactor` (first two repetitions use fixed intervals of 1 and 6 days).
+- Ease factor adjusts after every grade: it increases for easy responses and decreases for difficult ones.
+
+`ReviewGrade` is typed as `0 | 1 | 2 | 3 | 4 | 5` to match the full SM-2 spec, though the UI currently exposes grades 1–4.

@@ -1,0 +1,145 @@
+---
+title: Installation
+description: How to install lmscn components into a Next.js + shadcn/ui project.
+---
+
+## Step 1 — Set up shadcn/ui
+
+If you haven't already initialised shadcn/ui in your project:
+
+```bash
+npx shadcn@latest init
+```
+
+## Step 2 — Install shadcn/ui primitives
+
+lmscn reuses the shadcn/ui primitives already in your project — it does not ship its own copies.
+
+**Install everything at once (recommended):**
+
+```bash
+npx shadcn@latest add button card progress badge input scroll-area separator tooltip popover
+```
+
+**Or install only what each component needs:**
+
+| lmscn component | Required primitives |
+|---|---|
+| `quiz` | button, card, progress, badge |
+| `flashcards` | button, card, progress, badge |
+| `match` | button, progress, badge |
+| `fill-blank` | button, input, progress, badge |
+| `scramble` | button, progress, badge |
+| `order` | button, progress, badge |
+| `reading-passage` | button, card, badge, progress, scroll-area, separator |
+| `progress-tracker` | badge, card, progress, tooltip |
+| `spaced-repetition` | button, badge, card, progress |
+| `hotspot` | button, badge, input, progress, popover |
+
+### Radix UI packages
+
+These are installed automatically by shadcn — no manual action needed.
+
+| Primitive | Radix package |
+|---|---|
+| `button` | `@radix-ui/react-slot` |
+| `progress` | `@radix-ui/react-progress` |
+| `scroll-area` | `@radix-ui/react-scroll-area` |
+| `separator` | `@radix-ui/react-separator` |
+| `tooltip` | `@radix-ui/react-tooltip` |
+| `popover` | `@radix-ui/react-popover` |
+| `card`, `badge`, `input` | none (pure Tailwind) |
+
+## Step 3 — Install lmscn components
+
+### Option A — Direct URL
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/quiz.json
+npx shadcn@latest add https://lmscn.vercel.app/r/flashcards.json
+npx shadcn@latest add https://lmscn.vercel.app/r/match.json
+npx shadcn@latest add https://lmscn.vercel.app/r/fill-blank.json
+npx shadcn@latest add https://lmscn.vercel.app/r/scramble.json
+npx shadcn@latest add https://lmscn.vercel.app/r/order.json
+npx shadcn@latest add https://lmscn.vercel.app/r/reading-passage.json
+npx shadcn@latest add https://lmscn.vercel.app/r/progress-tracker.json
+npx shadcn@latest add https://lmscn.vercel.app/r/spaced-repetition.json
+npx shadcn@latest add https://lmscn.vercel.app/r/hotspot.json
+```
+
+### Option B — Registry namespace
+
+Add the registry once to `components.json`:
+
+```json
+{
+  "registries": {
+    "@lmscn": "https://lmscn.vercel.app/r/{name}.json"
+  }
+}
+```
+
+Then install using short names:
+
+```bash
+npx shadcn@latest add @lmscn/quiz
+npx shadcn@latest add @lmscn/flashcards
+npx shadcn@latest add @lmscn/match
+npx shadcn@latest add @lmscn/fill-blank
+npx shadcn@latest add @lmscn/scramble
+npx shadcn@latest add @lmscn/order
+npx shadcn@latest add @lmscn/reading-passage
+npx shadcn@latest add @lmscn/progress-tracker
+npx shadcn@latest add @lmscn/spaced-repetition
+npx shadcn@latest add @lmscn/hotspot
+```
+
+## Tailwind v4 notes
+
+lmscn targets Tailwind v4. If you are migrating from v3, here are the key differences:
+
+| v3 | v4 |
+|---|---|
+| `tailwind.config.ts` | Deleted — config lives in CSS |
+| `@tailwind base/components/utilities` | `@import "tailwindcss"` |
+| `tailwindcss-animate` plugin | `tw-animate-css` (imported) |
+| `autoprefixer` in postcss | Removed |
+| HSL color values | OKLCH color values |
+| `hsl(var(--primary))` | `var(--primary)` in `@theme inline` |
+
+**`postcss.config.js`:**
+
+```js
+module.exports = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+}
+```
+
+**`globals.css` pattern:**
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-primary:     var(--primary);
+  --color-secondary:   var(--secondary);
+  --color-background:  var(--background);
+  --color-foreground:  var(--foreground);
+  --color-muted:       var(--muted);
+  --color-destructive: var(--destructive);
+}
+
+:root {
+  --primary:     oklch(0.21 0.006 285.885);
+  --secondary:   oklch(0.97 0.001 286.375);
+  --background:  oklch(1 0 0);
+  --foreground:  oklch(0.141 0.005 285.823);
+  --muted:       oklch(0.967 0.001 286.375);
+  --destructive: oklch(0.577 0.245 27.325);
+}
+```
+
+The `@theme inline` block is what makes opacity modifiers like `bg-primary/50` work correctly with CSS variables.

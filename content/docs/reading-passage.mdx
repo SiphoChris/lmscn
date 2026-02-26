@@ -1,0 +1,132 @@
+---
+title: Reading Passage
+description: A three-phase reading comprehension component — read, answer, review.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/reading-passage.json
+```
+
+**Required primitives:** button, card, badge, progress, scroll-area, separator
+
+```bash
+npx shadcn@latest add button card badge progress scroll-area separator
+```
+
+## Usage
+
+```tsx
+import { ReadingPassage } from "@/components/lms/reading-passage"
+import type { ReadingPassageData, ReadingResult } from "@/components/lms/reading-passage"
+
+export function MyReading() {
+  return (
+    <ReadingPassage
+      readingPassageData={{
+        title: "The Water Cycle",
+        introduction: "Learn how water moves through Earth's systems.",
+        readingTimeMinutes: 3,
+        hidePassageOnQuestions: false,
+        content: `Solar energy drives evaporation, turning liquid water into vapour.
+This rises, cools and condenses into clouds, falling as precipitation.`,
+        questions: [
+          {
+            id: "q1",
+            type: "single",
+            question: "What drives the water cycle?",
+            options: [
+              { id: "a", label: "The Moon" },
+              { id: "b", label: "Solar energy" },
+            ],
+            correctIds: ["b"],
+            explanation: "The sun provides energy to evaporate water.",
+          },
+        ],
+      }}
+      onComplete={(result: ReadingResult) => {
+        console.log(`${result.score} / ${result.maxScore}`)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `ReadingPassageProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `readingPassageData` | `ReadingPassageData` | ✓ | Passage and questions configuration |
+| `onComplete` | `(result: ReadingResult) => void` | — | Called after the last question is answered |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `ReadingPassageData`
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | Passage title |
+| `introduction` | `string` | — | Subtitle / introductory note shown below the title |
+| `content` | `string` | — | The reading text |
+| `contentIsHtml` | `boolean` | `false` | Render `content` as HTML via `dangerouslySetInnerHTML` |
+| `questions` | `ReadingQuestion[]` | — | Comprehension questions |
+| `readingTimeMinutes` | `number` | — | Estimated read time shown as a badge |
+| `hidePassageOnQuestions` | `boolean` | `false` | Hide the passage while the learner is answering questions |
+
+### `ReadingQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `type` | `"single" \| "multiple" \| "true-false"` | Selection mode |
+| `question` | `string` | The question text |
+| `options` | `{ id: string; label: string }[]` | Answer options |
+| `correctIds` | `string[]` | IDs of the correct option(s) |
+| `explanation` | `string` | Shown in a muted panel after the learner submits |
+
+## Result
+
+`onComplete` receives a `ReadingResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `answers` | `ReadingAnswer[]` | Per-question answer records |
+| `score` | `number` | Number of correct answers |
+| `maxScore` | `number` | Total number of questions |
+| `percentage` | `number` | Rounded score percentage |
+
+```ts
+interface ReadingAnswer {
+  questionId: string
+  selected: string[]
+  correct: boolean
+}
+```
+
+## Phases
+
+The component moves through three sequential phases:
+
+**Reading** — the passage is displayed in a scrollable card. An estimated read time badge is shown if `readingTimeMinutes` is provided. The learner clicks **Start Questions** to proceed.
+
+**Questions** — questions are shown one at a time. When `hidePassageOnQuestions` is `false` (default), the passage remains visible in a collapsed scroll area above each question card.
+
+**Results** — shows the overall score and a per-question ✓ / ✗ summary.
+
+## HTML content
+
+Set `contentIsHtml: true` to render rich content with headings, lists, and inline formatting. The content is injected with `dangerouslySetInnerHTML` inside a `prose prose-sm dark:prose-invert` wrapper, so standard Tailwind Typography styles apply.
+
+```tsx
+content: `<h2>The Carbon Cycle</h2>
+<p>Carbon moves between the atmosphere, oceans, and living organisms...</p>
+<ul>
+  <li>Photosynthesis fixes atmospheric CO₂ into organic matter.</li>
+  <li>Respiration and decomposition return carbon to the atmosphere.</li>
+</ul>`,
+contentIsHtml: true,
+```

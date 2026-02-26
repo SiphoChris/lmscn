@@ -1,0 +1,105 @@
+---
+title: Scramble
+description: Letter-tile unscrambling activity with image and text clue support.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/scramble.json
+```
+
+**Required primitives:** button, progress, badge
+
+```bash
+npx shadcn@latest add button progress badge
+```
+
+## Usage
+
+```tsx
+import { Scramble } from "@/components/lms/scramble"
+import type { ScrambleData, ScrambleResult } from "@/components/lms/scramble"
+
+export function MyScramble() {
+  return (
+    <Scramble
+      scrambleData={{
+        title: "Science Terms",
+        questions: [
+          {
+            id: "1",
+            answer: "photosynthesis",
+            clue: "How plants make food",
+          },
+          {
+            id: "2",
+            answer: "mitochondria",
+            clue: "Powerhouse of the cell",
+            clueImage: "/cell-diagram.png",
+          },
+        ],
+      }}
+      onComplete={(result: ScrambleResult) => {
+        console.log(`${result.score} / ${result.maxScore}`)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `ScrambleProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `scrambleData` | `ScrambleData` | ✓ | Questions configuration |
+| `onComplete` | `(result: ScrambleResult) => void` | — | Called after the last question |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `ScrambleData`
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | `string` | Activity title |
+| `description` | `string` | Subtitle |
+| `questions` | `ScrambleQuestion[]` | List of scramble questions |
+
+### `ScrambleQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `answer` | `string` | The correct word or phrase. Spaces are stripped when building the tile pool |
+| `clue` | `string` | Context text shown above the tiles |
+| `clueImage` | `string` | URL of an optional image clue shown above the text clue |
+
+## Result
+
+`onComplete` receives a `ScrambleResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `attempts` | `ScrambleAttempt[]` | Per-question attempt records |
+| `score` | `number` | Number of correct answers |
+| `maxScore` | `number` | Total number of questions |
+| `percentage` | `number` | Rounded score percentage |
+
+```ts
+interface ScrambleAttempt {
+  questionId: string
+  given: string    // the word the learner assembled
+  correct: boolean
+}
+```
+
+## Behaviour
+
+- The answer string is split into individual characters, shuffled, and displayed as a pool of clickable tiles at the bottom of the card.
+- Tapping a pool tile moves it into the answer tray at the top. Tapping a tray tile returns it to the pool.
+- The shuffler guarantees the initial order is never identical to the correct answer (for words longer than one character).
+- **Reset** returns all tray tiles back to the pool without re-shuffling.
+- Matching is case-insensitive.

@@ -1,0 +1,140 @@
+---
+title: Hotspot
+description: Click-to-label image annotation — learners type the correct label for each marked point on an image.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/hotspot.json
+```
+
+**Required primitives:** button, badge, input, progress, popover
+
+```bash
+npx shadcn@latest add button badge input progress popover
+```
+
+## Usage
+
+```tsx
+import { Hotspot } from "@/components/lms/hotspot"
+import type { HotspotData, HotspotResult } from "@/components/lms/hotspot"
+
+export function MyHotspot() {
+  return (
+    <Hotspot
+      hotspotData={{
+        title: "Heart Anatomy",
+        questions: [
+          {
+            id: "q1",
+            imageUrl: "/heart-diagram.png",
+            imageAlt: "Diagram of the human heart",
+            prompt: "Label the four chambers of the heart:",
+            caseSensitive: false,
+            points: [
+              {
+                id: "p1",
+                x: 30,
+                y: 40,
+                label: "Left Ventricle",
+                description: "Pumps oxygenated blood to the body.",
+              },
+              {
+                id: "p2",
+                x: 60,
+                y: 40,
+                label: "Right Ventricle",
+                description: "Pumps deoxygenated blood to the lungs.",
+              },
+              { id: "p3", x: 30, y: 20, label: "Left Atrium" },
+              { id: "p4", x: 60, y: 20, label: "Right Atrium" },
+            ],
+          },
+        ],
+      }}
+      onComplete={(result: HotspotResult) => {
+        console.log(result.percentage + "% correct")
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `HotspotProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `hotspotData` | `HotspotData` | ✓ | Questions and image configuration |
+| `onComplete` | `(result: HotspotResult) => void` | — | Called after the last question |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `HotspotData`
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | `string` | Activity title |
+| `description` | `string` | Subtitle |
+| `questions` | `HotspotQuestion[]` | List of hotspot questions |
+
+### `HotspotQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `imageUrl` | `string` | URL of the background image |
+| `imageAlt` | `string` | Accessible alt text for the image |
+| `prompt` | `string` | Instruction shown above the image |
+| `points` | `HotspotPoint[]` | Marker definitions |
+| `caseSensitive` | `boolean` | Case-sensitive label matching — defaults to `false` |
+
+### `HotspotPoint`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `x` | `number` | Horizontal position as a **percentage** from the left edge (0–100) |
+| `y` | `number` | Vertical position as a **percentage** from the top edge (0–100) |
+| `label` | `string` | The correct label the learner must type |
+| `description` | `string` | Optional detail revealed in the popover after a correct answer |
+
+## Result
+
+`onComplete` receives a `HotspotResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `attempts` | `HotspotAttempt[]` | Per-question records |
+| `totalScore` | `number` | Total correct labels across all questions |
+| `maxScore` | `number` | Total labels across all questions |
+| `percentage` | `number` | Rounded score percentage |
+
+```ts
+interface HotspotAttempt {
+  questionId: string
+  answers: Record<string, string>  // pointId → typed answer
+  score: number                    // correct labels in this question
+  maxScore: number                 // total labels in this question
+}
+```
+
+## Behaviour
+
+- Each marker is rendered as a circular **`+`** button absolutely positioned over the image using the `x` / `y` percentage values.
+- Clicking a marker opens a **Popover** containing a text input. Pressing Enter closes the popover and saves the typed value.
+- After the learner clicks **Check Labels**, all popovers switch to read-only mode showing ✓ / ✗ and the correct answer for incorrect points.
+- Markers turn green (correct) or red (incorrect) after checking.
+- The progress bar advances per question, not per label.
+
+## Positioning tips
+
+The `x` and `y` values are CSS percentages relative to the image's rendered size, so they remain accurate regardless of the container width. Use your browser's developer tools to find the right coordinates:
+
+1. Open the image in a browser.
+2. Right-click → **Inspect**, then hover over the image element.
+3. Note the pixel dimensions, then calculate `x = (pixelX / width) * 100` and `y = (pixelY / height) * 100`.

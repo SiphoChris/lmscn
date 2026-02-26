@@ -1,0 +1,105 @@
+---
+title: Flashcards
+description: A flippable flashcard deck with optional self-rating and shuffle support.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/flashcards.json
+```
+
+**Required primitives:** button, card, progress, badge
+
+```bash
+npx shadcn@latest add button card progress badge
+```
+
+## Usage
+
+```tsx
+import { Flashcards } from "@/components/lms/flashcards"
+import type { FlashcardsData, FlashcardsResult } from "@/components/lms/flashcards"
+
+const data: FlashcardsData = {
+  title: "Spanish Vocabulary",
+  description: "Core greetings",
+  shuffle: true,
+  showRatings: true,
+  cards: [
+    { id: "1", front: "Hola",      back: "Hello",     tag: "Greetings" },
+    { id: "2", front: "Gracias",   back: "Thank you", tag: "Greetings" },
+    { id: "3", front: "Por favor", back: "Please",    tag: "Greetings" },
+  ],
+}
+
+export function MyFlashcards() {
+  return (
+    <Flashcards
+      flashcardsData={data}
+      onComplete={(result: FlashcardsResult) => {
+        console.log(result.counts)
+        // { again: 1, hard: 0, good: 1, easy: 1 }
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `FlashcardsProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `flashcardsData` | `FlashcardsData` | ✓ | Deck configuration |
+| `onComplete` | `(result: FlashcardsResult) => void` | — | Called after the last card is rated |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `FlashcardsData`
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | Deck title |
+| `description` | `string` | — | Subtitle |
+| `cards` | `Flashcard[]` | — | The cards in the deck |
+| `showRatings` | `boolean` | `true` | Show Again / Hard / Good / Easy buttons after flipping |
+| `shuffle` | `boolean` | `false` | Randomise card order on mount |
+
+### `Flashcard`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `front` | `string` | Front face text |
+| `back` | `string` | Back face text |
+| `frontImage` | `string` | URL for an image on the front face |
+| `backImage` | `string` | URL for an image on the back face |
+| `tag` | `string` | Category badge shown on the front face |
+
+## Result
+
+`onComplete` receives a `FlashcardsResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `ratings` | `FlashcardRating[]` | Per-card difficulty ratings in session order |
+| `counts` | `Record<FlashcardDifficulty, number>` | Tally of each rating across the session |
+
+```ts
+type FlashcardDifficulty = "again" | "hard" | "good" | "easy"
+
+interface FlashcardRating {
+  cardId: string
+  difficulty: FlashcardDifficulty
+}
+```
+
+## Behaviour
+
+- The card flips with a 3-D CSS rotation on click or Enter.
+- Navigation arrows allow jumping back to a previously seen card. Going back does not award another rating for the skipped card.
+- When `showRatings` is `false`, a single **Next** button advances the deck without recording difficulty.
+- The session completes after the last card is rated, showing a four-column summary (Again / Hard / Good / Easy counts) with a **Restart** button.

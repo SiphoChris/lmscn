@@ -1,0 +1,117 @@
+---
+title: Order
+description: Drag-and-drop (or keyboard) sequencing activity with correct-order feedback.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/order.json
+```
+
+**Required primitives:** button, progress, badge
+
+```bash
+npx shadcn@latest add button progress badge
+```
+
+## Usage
+
+```tsx
+import { Order } from "@/components/lms/order"
+import type { OrderData, OrderResult } from "@/components/lms/order"
+
+export function MyOrder() {
+  return (
+    <Order
+      orderData={{
+        title: "Star Lifecycle",
+        questions: [
+          {
+            id: "q1",
+            prompt: "Order the stages of a star's life:",
+            hint: "It starts with a cloud of gas and dust.",
+            items: [
+              { id: "1", label: "Nebula",        description: "A cloud of gas and dust" },
+              { id: "2", label: "Protostar" },
+              { id: "3", label: "Main Sequence",  description: "Stable hydrogen fusion" },
+              { id: "4", label: "Red Giant" },
+              { id: "5", label: "White Dwarf" },
+            ],
+          },
+        ],
+      }}
+      onComplete={(result: OrderResult) => {
+        console.log(result.percentage + "%")
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `OrderProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `orderData` | `OrderData` | ✓ | Questions configuration |
+| `onComplete` | `(result: OrderResult) => void` | — | Called after the last question |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `OrderData`
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | `string` | Activity title |
+| `description` | `string` | Subtitle |
+| `questions` | `OrderQuestion[]` | List of sequencing questions |
+
+### `OrderQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `prompt` | `string` | Instruction shown above the list |
+| `items` | `OrderItem[]` | Items listed **in the correct order** — the component shuffles them on mount |
+| `hint` | `string` | Optional hint shown before submitting |
+
+### `OrderItem`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `label` | `string` | Primary label text |
+| `description` | `string` | Optional secondary line shown below the label |
+
+## Result
+
+`onComplete` receives an `OrderResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `attempts` | `OrderAttempt[]` | Per-question attempt records |
+| `score` | `number` | Number of questions where the entire order was correct |
+| `maxScore` | `number` | Total number of questions |
+| `percentage` | `number` | Rounded score percentage |
+
+```ts
+interface OrderAttempt {
+  questionId: string
+  givenOrder: string[]   // item IDs in the order the learner submitted
+  correctOrder: string[] // item IDs in the correct order
+  correct: boolean
+}
+```
+
+## Behaviour
+
+**Drag and drop** — items have a grab handle on the left. Drag an item over another to reorder.
+
+**Keyboard** — focus an item and press ↑ or ↓ to move it one position. This makes the activity fully accessible without a pointer device.
+
+**Shuffle** — a **Shuffle** button re-randomises the list, resetting any manual ordering. It is disabled once the learner has submitted.
+
+After submitting an incorrect order, the correct sequence is displayed in a muted panel below the list. Per-item ✓ / ✗ icons indicate which positions were right.

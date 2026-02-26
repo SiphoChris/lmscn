@@ -1,0 +1,93 @@
+---
+title: Match
+description: A two-column term-to-definition matching activity with mistake tracking and a timer.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/match.json
+```
+
+**Required primitives:** button, progress, badge
+
+```bash
+npx shadcn@latest add button progress badge
+```
+
+## Usage
+
+```tsx
+import { Match } from "@/components/lms/match"
+import type { MatchData, MatchResult } from "@/components/lms/match"
+
+export function MyMatch() {
+  return (
+    <Match
+      matchData={{
+        title: "Capital Cities",
+        description: "Match each country to its capital.",
+        shuffle: true,
+        pairs: [
+          { id: "1", left: "France",  right: "Paris"  },
+          { id: "2", left: "Japan",   right: "Tokyo"  },
+          { id: "3", left: "Egypt",   right: "Cairo"  },
+          { id: "4", left: "Brazil",  right: "Brasília" },
+        ],
+      }}
+      onComplete={(result: MatchResult) => {
+        console.log(`${result.mistakes} mistakes in ${result.durationMs}ms`)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `MatchProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `matchData` | `MatchData` | ✓ | Pairs configuration |
+| `onComplete` | `(result: MatchResult) => void` | — | Called when all pairs are matched |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `MatchData`
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | Activity title |
+| `description` | `string` | — | Subtitle |
+| `pairs` | `MatchPair[]` | — | Term / definition pairs |
+| `shuffle` | `boolean` | `true` | Randomise the right column order on mount |
+
+### `MatchPair`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `left` | `string` | Term (left column) |
+| `right` | `string` | Definition (right column) |
+| `leftImage` | `string` | Optional image URL for the term |
+| `rightImage` | `string` | Optional image URL for the definition |
+
+## Result
+
+`onComplete` receives a `MatchResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `matched` | `MatchPair[]` | All pairs in original order |
+| `mistakes` | `number` | Count of incorrect pair attempts |
+| `durationMs` | `number` | Total time taken in milliseconds |
+
+## Behaviour
+
+- Clicking a term selects it (highlighted in primary colour). Clicking a definition while a term is selected attempts the match.
+- A correct match locks both items green and removes them from play.
+- An incorrect match briefly flashes both items red, then deselects them after 600 ms.
+- The timer starts on mount and stops when the last pair is matched.
+- The completion screen shows the mistake count, elapsed seconds, and a **Play Again** button that resets state without remounting.

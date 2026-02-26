@@ -1,19 +1,25 @@
 # lmscn — Install Guide
 
-## What stack this uses
+## Stack
 
 | Tool | Version |
 |---|---|
+| Next.js | 16 |
+| React | 19 |
 | Tailwind CSS | **v4** |
 | shadcn/ui | latest (new-york style) |
-| React | 19 |
-| Next.js | 16 |
 
 ---
 
-## Step 1 — Install shadcn/ui primitives
+## Step 1 — Set up shadcn/ui
 
-lmscn does not ship its own shadcn primitives. It reuses the ones in your project.
+```bash
+npx shadcn@latest
+```
+
+## Step 2 — Install shadcn/ui primitives
+
+lmscn reuses the shadcn/ui primitives already in your project — it does not ship its own copies.
 
 **Install everything at once (recommended):**
 
@@ -21,7 +27,7 @@ lmscn does not ship its own shadcn primitives. It reuses the ones in your projec
 npx shadcn@latest add button card progress badge input scroll-area separator tooltip popover
 ```
 
-**Or per-component:**
+**Or install only what each component needs:**
 
 | lmscn component | Required primitives | Command |
 |---|---|---|
@@ -36,9 +42,21 @@ npx shadcn@latest add button card progress badge input scroll-area separator too
 | `spaced-repetition` | button, badge, card, progress | `npx shadcn@latest add button badge card progress` |
 | `hotspot` | button, badge, input, progress, popover | `npx shadcn@latest add button badge input progress popover` |
 
+### Radix UI packages (installed automatically by shadcn)
+
+| Primitive | Radix package |
+|---|---|
+| `button` | `@radix-ui/react-slot` |
+| `progress` | `@radix-ui/react-progress` |
+| `scroll-area` | `@radix-ui/react-scroll-area` |
+| `separator` | `@radix-ui/react-separator` |
+| `tooltip` | `@radix-ui/react-tooltip` |
+| `popover` | `@radix-ui/react-popover` |
+| `card`, `badge`, `input` | none (pure Tailwind) |
+
 ---
 
-## Step 2 — Install lmscn components
+## Step 3 — Install lmscn components
 
 ### Option A — Direct URL
 
@@ -55,7 +73,9 @@ npx shadcn@latest add https://lmscn.vercel.app/r/spaced-repetition.json
 npx shadcn@latest add https://lmscn.vercel.app/r/hotspot.json
 ```
 
-### Option B — Namespace (add once to components.json, then use short names)
+### Option B — Registry namespace
+
+Add the registry to `components.json` once:
 
 ```json
 {
@@ -65,68 +85,29 @@ npx shadcn@latest add https://lmscn.vercel.app/r/hotspot.json
 }
 ```
 
+Then install using the short namespace:
+
 ```bash
 npx shadcn@latest add @lmscn/quiz
 npx shadcn@latest add @lmscn/flashcards
-# etc.
+npx shadcn@latest add @lmscn/match
+npx shadcn@latest add @lmscn/fill-blank
+npx shadcn@latest add @lmscn/scramble
+npx shadcn@latest add @lmscn/order
+npx shadcn@latest add @lmscn/reading-passage
+npx shadcn@latest add @lmscn/progress-tracker
+npx shadcn@latest add @lmscn/spaced-repetition
+npx shadcn@latest add @lmscn/hotspot
 ```
-
----
-
-## Tailwind v4 — what's different in this project
-
-| v3 | v4 (this project) |
-|---|---|
-| `tailwind.config.ts` | **Deleted** — config lives in CSS |
-| `@tailwind base/components/utilities` | `@import "tailwindcss"` |
-| `tailwindcss-animate` | `tw-animate-css` (import, not plugin) |
-| `autoprefixer` in postcss | **Removed** — not needed in v4 |
-| HSL color values | **OKLCH** color values |
-| `postcss: { tailwindcss: {}, autoprefixer: {} }` | `postcss: { "@tailwindcss/postcss": {} }` |
-| `hsl(var(--primary))` in config | `var(--primary)` directly in `@theme inline` |
-
-**The key pattern — `globals.css`:**
-
-```css
-@import "tailwindcss";
-@import "tw-animate-css";
-
-@theme inline {
-  --color-primary: var(--primary);
-  /* ... maps CSS vars → Tailwind color tokens */
-}
-
-:root {
-  --primary: oklch(0.21 0.006 285.885);
-  /* ... actual OKLCH values */
-}
-```
-
-`@theme inline` is what makes `bg-primary/50` opacity modifiers work with CSS variables.
-
----
-
-## Radix UI packages (installed by shadcn automatically)
-
-| Primitive | Radix package | Notes |
-|---|---|---|
-| `button` | `@radix-ui/react-slot` | |
-| `card` | none | Pure Tailwind |
-| `progress` | `@radix-ui/react-progress` | |
-| `badge` | none | Pure Tailwind |
-| `input` | none | Pure Tailwind |
-| `scroll-area` | `@radix-ui/react-scroll-area` | |
-| `separator` | `@radix-ui/react-separator` | |
-| `tooltip` | `@radix-ui/react-tooltip` | |
-| `popover` | `@radix-ui/react-popover` | |
-
-`npx shadcn@latest add <primitive>` handles all Radix installs automatically.
 
 ---
 
 ## Usage examples
 
+For full prop documentation and all available types, see the [README](./README.md).
+
 ### Quiz
+
 ```tsx
 import { Quiz } from "@/components/lms/quiz"
 import type { QuizData, QuizResult } from "@/components/lms/quiz"
@@ -153,6 +134,7 @@ export function MyLesson() {
 ```
 
 ### Flashcards
+
 ```tsx
 import { Flashcards } from "@/components/lms/flashcards"
 import type { FlashcardsData } from "@/components/lms/flashcards"
@@ -166,12 +148,14 @@ const data: FlashcardsData = {
     { id: "3", front: "Por favor", back: "Please",    tag: "Greetings" },
   ],
 }
+
 export function MyFlashcards() {
   return <Flashcards flashcardsData={data} onComplete={(r) => console.log(r.counts)} />
 }
 ```
 
 ### Match
+
 ```tsx
 import { Match } from "@/components/lms/match"
 
@@ -181,9 +165,9 @@ export function MyMatch() {
       matchData={{
         title: "Capital Cities",
         pairs: [
-          { id: "1", left: "France", right: "Paris"    },
-          { id: "2", left: "Japan",  right: "Tokyo"    },
-          { id: "3", left: "Egypt",  right: "Cairo"    },
+          { id: "1", left: "France", right: "Paris"  },
+          { id: "2", left: "Japan",  right: "Tokyo"  },
+          { id: "3", left: "Egypt",  right: "Cairo"  },
         ],
       }}
       onComplete={(r) => alert(`${r.mistakes} mistakes`)}
@@ -193,6 +177,7 @@ export function MyMatch() {
 ```
 
 ### Fill in the Blank
+
 ```tsx
 import { FillBlank } from "@/components/lms/fill-blank"
 
@@ -215,6 +200,7 @@ export function MyFillBlank() {
 ```
 
 ### Word Scramble
+
 ```tsx
 import { Scramble } from "@/components/lms/scramble"
 
@@ -234,6 +220,7 @@ export function MyScramble() {
 ```
 
 ### Order / Sequence
+
 ```tsx
 import { Order } from "@/components/lms/order"
 
@@ -260,6 +247,7 @@ export function MyOrder() {
 ```
 
 ### Reading Passage
+
 ```tsx
 import { ReadingPassage } from "@/components/lms/reading-passage"
 
@@ -284,6 +272,7 @@ This rises, cools and condenses into clouds, falling as precipitation.`,
 ```
 
 ### Progress Tracker
+
 ```tsx
 import { ProgressTracker } from "@/components/lms/progress-tracker"
 import type { LessonNode } from "@/components/lms/progress-tracker"
@@ -297,7 +286,7 @@ export function MyProgress() {
         units: [{
           id: "u1", title: "Biology Unit 1",
           lessons: [
-            { id: "l1", title: "The Cell",         status: "completed", xp: 50,  type: "reading", score: 92 },
+            { id: "l1", title: "The Cell",        status: "completed", xp: 50,  type: "reading", score: 92 },
             { id: "l2", title: "Cell Organelles",  status: "current",   xp: 100, type: "quiz" },
             { id: "l3", title: "Match Functions",  status: "locked",    xp: 75,  type: "match" },
           ],
@@ -310,6 +299,7 @@ export function MyProgress() {
 ```
 
 ### Spaced Repetition
+
 ```tsx
 import { SpacedRepetition } from "@/components/lms/spaced-repetition"
 
@@ -332,6 +322,7 @@ export function MySR() {
 ```
 
 ### Image Hotspot
+
 ```tsx
 import { Hotspot } from "@/components/lms/hotspot"
 
@@ -357,40 +348,4 @@ export function MyHotspot() {
     />
   )
 }
-```
-
----
-
-## All exported TypeScript types
-
-```ts
-// quiz
-import type { QuizData, QuizQuestion, QuizOption, QuizQuestionType, QuizResult, QuizProps } from "@/components/lms/quiz"
-
-// flashcards
-import type { FlashcardsData, Flashcard, FlashcardDifficulty, FlashcardRating, FlashcardsResult, FlashcardsProps } from "@/components/lms/flashcards"
-
-// match
-import type { MatchData, MatchPair, MatchResult, MatchProps } from "@/components/lms/match"
-
-// fill-blank
-import type { FillBlankData, FillBlankQuestion, FillBlankAttempt, FillBlankResult, FillBlankProps } from "@/components/lms/fill-blank"
-
-// scramble
-import type { ScrambleData, ScrambleQuestion, ScrambleAttempt, ScrambleResult, ScrambleProps } from "@/components/lms/scramble"
-
-// order
-import type { OrderData, OrderQuestion, OrderItem, OrderAttempt, OrderResult, OrderProps } from "@/components/lms/order"
-
-// reading-passage
-import type { ReadingPassageData, ReadingQuestion, ReadingAnswer, ReadingResult, ReadingPassageProps } from "@/components/lms/reading-passage"
-
-// progress-tracker
-import type { ProgressTrackerData, LearningUnit, LessonNode, LessonStatus, LessonType, ProgressTrackerProps } from "@/components/lms/progress-tracker"
-
-// spaced-repetition
-import type { SpacedRepetitionData, ReviewCard, ReviewGrade, ReviewSession, SpacedRepetitionResult, SpacedRepetitionProps } from "@/components/lms/spaced-repetition"
-
-// hotspot
-import type { HotspotData, HotspotQuestion, HotspotPoint, HotspotAttempt, HotspotResult, HotspotProps } from "@/components/lms/hotspot"
 ```

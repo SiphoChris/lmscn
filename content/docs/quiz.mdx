@@ -1,0 +1,131 @@
+---
+title: Quiz
+description: A multi-question quiz supporting single-choice, multiple-choice, and true/false question types.
+---
+
+## Installation
+
+```bash
+npx shadcn@latest add https://lmscn.vercel.app/r/quiz.json
+```
+
+**Required primitives:** button, card, progress, badge
+
+```bash
+npx shadcn@latest add button card progress badge
+```
+
+## Usage
+
+```tsx
+import { Quiz } from "@/components/lms/quiz"
+import type { QuizData, QuizResult } from "@/components/lms/quiz"
+
+const data: QuizData = {
+  title: "JavaScript Basics",
+  description: "Test your knowledge of JS fundamentals.",
+  passingScore: 80,
+  showExplanations: true,
+  questions: [
+    {
+      id: "q1",
+      type: "single",
+      question: "What does `typeof null` return?",
+      options: [
+        { id: "a", label: "null" },
+        { id: "b", label: "object", explanation: "A historical quirk in the JS spec." },
+        { id: "c", label: "undefined" },
+      ],
+      correctIds: ["b"],
+      hint: "It's a well-known JavaScript oddity.",
+    },
+    {
+      id: "q2",
+      type: "multiple",
+      question: "Which are falsy values in JavaScript?",
+      options: [
+        { id: "a", label: "0" },
+        { id: "b", label: '""' },
+        { id: "c", label: '"false"' },
+        { id: "d", label: "null" },
+      ],
+      correctIds: ["a", "b", "d"],
+      points: 2,
+    },
+  ],
+}
+
+export function MyQuiz() {
+  return (
+    <Quiz
+      quizData={data}
+      onComplete={(result: QuizResult) => {
+        console.log(`${result.percentage}% — ${result.passed ? "Passed" : "Failed"}`)
+      }}
+    />
+  )
+}
+```
+
+## Props
+
+### `QuizProps`
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `quizData` | `QuizData` | ✓ | Quiz configuration and questions |
+| `onComplete` | `(result: QuizResult) => void` | — | Called when the last question is answered |
+| `className` | `string` | — | Additional CSS classes |
+
+## Data shape
+
+### `QuizData`
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | Displayed in the card header |
+| `description` | `string` | — | Subtitle below the title |
+| `questions` | `QuizQuestion[]` | — | List of questions |
+| `showExplanations` | `boolean` | `true` | Show per-option explanations after answering |
+| `shuffle` | `boolean` | `false` | Randomise question order on mount |
+| `passingScore` | `number` | `70` | Minimum percentage (0–100) required to pass |
+
+### `QuizQuestion`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `type` | `"single" \| "multiple" \| "true-false"` | Selection mode |
+| `question` | `string` | The question text |
+| `options` | `QuizOption[]` | Answer options |
+| `correctIds` | `string[]` | IDs of the correct option(s) |
+| `hint` | `string` | Optional hint shown before submitting |
+| `points` | `number` | Point value — defaults to `1` |
+
+### `QuizOption`
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Unique identifier |
+| `label` | `string` | Displayed text |
+| `explanation` | `string` | Shown beneath the option after the answer is revealed |
+
+## Result
+
+`onComplete` receives a `QuizResult` object:
+
+| Field | Type | Description |
+|---|---|---|
+| `score` | `number` | Total points earned |
+| `maxScore` | `number` | Total points available |
+| `percentage` | `number` | Rounded score as a percentage |
+| `passed` | `boolean` | `true` if `percentage >= passingScore` |
+| `answers` | `Record<string, string[]>` | Map of question ID → selected option IDs |
+
+## Question types
+
+**`single`** — the learner picks exactly one option. Clicking another option deselects the previous one.
+
+**`multiple`** — the learner picks all that apply. A "Select all that apply" label is shown automatically.
+
+**`true-false`** — identical to `single` but conventionally used with two options labelled "True" and "False".

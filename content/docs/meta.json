@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "index",
+    "installation",
+    "fill-blank",
+    "flashcards",
+    "hotspot",
+    "match",
+    "order",
+    "progress-tracker",
+    "quiz",
+    "reading-passage",
+    "scramble",
+    "spaced-repetition"
+  ]
+}
