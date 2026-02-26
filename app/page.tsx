@@ -662,7 +662,6 @@ export default function Home() {
               >
                 GitHub
               </a>
-              <LmscnLogo />
             </li>
           </ul>
         </footer>
