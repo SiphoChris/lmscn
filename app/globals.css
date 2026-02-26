@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* fumadocs UI styles */
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
 
 /*
   Tailwind v4 — CSS-first config. No tailwind.config.ts needed.

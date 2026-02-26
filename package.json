@@ -10,14 +10,20 @@
     "registry:serve": "next dev --turbopack"
   },
   "dependencies": {
+    "@types/mdx": "^2.0.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fumadocs-core": "^16.6.5",
+    "fumadocs-mdx": "^14.2.8",
+    "fumadocs-ui": "^16.6.5",
     "lucide-react": "^0.454.0",
     "next": "^16.1.6",
     "radix-ui": "^1.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwind-merge": "^2.5.5"
+    "server": "link:fumadocs-mdx:collections/server",
+    "tailwind-merge": "^2.5.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
