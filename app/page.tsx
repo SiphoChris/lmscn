@@ -608,7 +608,7 @@ export default function Home() {
             return (
               <a
                 key={c.slug}
-                href={`/docs/components/${c.slug}`}
+                href={`/docs/${c.slug}`}
                 className="card"
               >
                 <div className="card-name">{c.name}</div>
